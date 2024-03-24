@@ -276,8 +276,8 @@ export default function RecoveryPhraseScreen({navigation}) {
           <View style={styles.buttons}>
           <TouchableOpacity
               style={[styles.buttonStyle, {borderColor: theme.buttonBorder}]}
-              // onPress={() => navigation.navigate('RecoveryConfirm', { mnemonic: mnemonic })}
-              onPress={()=> navigation.navigate('SetPasswordScreen')}
+              onPress={() => navigation.navigate('RecoveryConfirm', { mnemonic: mnemonic })}
+              // onPress={()=> navigation.navigate('SetPasswordScreen')}
               >
               <Text style={[styles.btnText, {color: theme.text}]}>
                 Next
