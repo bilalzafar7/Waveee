@@ -59,7 +59,7 @@ const CURRENCIES = [
   },
 ];
 export default function CurrencyScreen({navigation}) {
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('USD $');
   const [currencycode, setCurrencycode] = useState('usd');
   const [currencyS, setCurrencyS] = useState('$');
 

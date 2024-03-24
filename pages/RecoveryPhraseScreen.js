@@ -31,22 +31,6 @@ import {
 
 
 
-
-const configureGoogleSignIn = async () => {
-  try {
-    await GoogleSignin.configure({
-      scopes: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
-      webClientId:'948850218791-13hpl0mv8s0s2pabcvf5tgi7fe5nr0mo.apps.googleusercontent.com',
-    });
-    console.log('Google Sign-In configured successfully');
-  } catch (error) {
-    console.error('Error configuring Google Sign-In:', error);
-  }
-};
-
-configureGoogleSignIn();
-
-
 const createAndSaveJSONFile = async (data, fileName) => {
   const path = `${RNFS.DocumentDirectoryPath}/${fileName}.json`;
   try {
@@ -210,75 +194,6 @@ export default function RecoveryPhraseScreen({navigation}) {
     setSelectedNetwork(Networks[0])
   },[])
 
-  useEffect(() => {
-    // Initial configuration
-    GoogleSignin.configure({
-      // Mandatory method to call before calling signIn()
-      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-      // Repleace with your webClientId
-      // Generated from Firebase console
-      webClientId: 'REPLACE_YOUR_WEB_CLIENT_ID_HERE',
-    });
-    // Check if user is already signed in
-    _isSignedIn();
-  }, []);
-
-  const _isSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    if (isSignedIn) {
-      alert('User is already signed in');
-      // Set User Info if user is already signed in
-      _getCurrentUserInfo();
-    } else {
-      console.log('Please Login');
-    }
-    setGettingLoginStatus(false);
-  };
-
-  const _getCurrentUserInfo = async () => {
-    try {
-      let info = await GoogleSignin.signInSilently();
-      console.log('User Info --> ', info);
-      setUserInfo(info);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        alert('User has not signed in yet');
-        console.log('User has not signed in yet');
-      } else {
-        alert("Unable to get user's info");
-        console.log("Unable to get user's info");
-      }
-    }
-  };
-
-  const _signIn = async () => {
-    // It will prompt google Signin Widget
-    try {
-      await GoogleSignin.hasPlayServices({
-        // Check if device has Google Play Services installed
-        // Always resolves to true on iOS
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
-      console.log('User Info --> ', userInfo);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.log('Message', JSON.stringify(error));
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('User Cancelled the Login Flow');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        alert('Signing In');
-      } else if (
-          error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
-        ) {
-        alert('Play Services Not Available or Outdated');
-      } else {
-        alert(error.message);
-      }
-    }
-  };
-
-
 
   const handleSaveFile = async () => {
     const data = { backup : backup }; 
@@ -289,45 +204,6 @@ export default function RecoveryPhraseScreen({navigation}) {
     }
   };
   console.log(mnemonic)
-
-  const uploadFileToDrive = async (filePath) => {
-    try {
-      // Authenticate user
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-  
-      // Get access token
-      const { accessToken } = userInfo;
-  
-      // Configure Google Drive API
-      GDrive.setAccessToken(accessToken);
-  
-      // Upload file to Drive
-      const res = await GDrive.files.createFileMultipart(
-        filePath,
-        'application/json', // Assuming it's a JSON file
-        {
-          parents: ['root'], // Upload to root folder
-          name: 'Wallet_Backup.json', // File name
-        },
-      );
-  
-      // Handle response
-      console.log('File uploaded successfully:', res);
-    } catch (error) {
-      console.error('Error uploading file to Google Drive:', error);
-    }
-  };
-
-  const handleSaveFileGoogle = async () => {
-    const data = { backup: backup };
-    const fileName = 'Wallet_Backup';
-    const filePath = await createAndSaveJSONFile(data, fileName);
-    if (filePath) {
-      await uploadFileToDrive(filePath);
-    }
-  };
-
   return (
     <ScrollView style={{backgroundColor: theme.screenBackgroud}}>
       <Header
@@ -438,7 +314,7 @@ export default function RecoveryPhraseScreen({navigation}) {
                   backgroundColor: theme.backupBtnBG,
                 },
               ]}
-              onPress={_signIn}>
+              >
               <Image style={styles.logos} source={gd} />
               <Text style={[styles.btnText, {color: theme.text}]}>
                 Backup to Google Drive
