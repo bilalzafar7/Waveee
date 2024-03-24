@@ -1,0 +1,23 @@
+{
+  "name": "react-native-faceid",
+  "version": "1.0.0",
+  "description": "faceid react native component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kennytian/react-native-faceid.git"
+  },
+  "keywords": [
+    "faceid",
+    "face"
+  ],
+  "author": "Kenny Tian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kennytian/react-native-faceid/issues"
+  },
+  "homepage": "https://github.com/Kennytian/react-native-faceid#readme"
+}
